@@ -1,0 +1,19 @@
+# application.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: playground
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/extermachraf/dep.git # Replace with your own GitHub repo
+    targetRevision: HEAD
+    path: . # Directory containing your Kubernetes manifests
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: dev
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

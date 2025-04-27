@@ -1,0 +1,20 @@
+# k3d-cluster.yaml
+apiVersion: k3d.io/v1alpha4
+kind: Simple
+metadata:
+  name: argocd-cluster
+servers: 1
+agents: 1
+ports:
+  - port: 8080:80
+    nodeFilters:
+      - loadbalancer
+  - port: 8888:30888
+    nodeFilters:
+      - loadbalancer
+options:
+  k3s:
+    extraArgs:
+      - arg: --disable=traefik
+        nodeFilters:
+          - server:*

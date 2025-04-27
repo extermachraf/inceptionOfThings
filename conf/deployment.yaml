@@ -1,0 +1,44 @@
+# deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: playground
+  namespace: dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: playground
+  template:
+    metadata:
+      labels:
+        app: playground
+    spec:
+      imagePullSecrets:
+        - name: regcred
+      containers:
+        - name: playground
+          image: wil42/playground:v1
+          ports:
+            - containerPort: 8888
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "200m"
+              memory: "256Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: playground
+  namespace: dev
+spec:
+  selector:
+    app: playground
+  ports:
+    - port: 8888
+      targetPort: 8888
+      nodePort: 30888 # Added nodePort
+  type: NodePort # Changed from ClusterIP to NodePort
